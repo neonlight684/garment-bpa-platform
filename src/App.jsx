@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useBPAStore } from './store/useBPAStore';
-import { Factory, Globe, Cpu, AlertTriangle, Layers } from 'lucide-react';
+import { Factory, Globe, Cpu, AlertTriangle, Layers, Radio, Sparkles } from 'lucide-react';
 
 // Sub-components Import
 import TechPackBOM from './components/preproduction/TechPackBOM';
@@ -10,6 +10,9 @@ import LineBalancing from './components/floor/LineBalancing';
 import PackingList from './components/floor/PackingList';
 import TradeCompliance from './components/trade/TradeCompliance';
 import KPIIntegration from './components/floor/KPIIntegration';
+import LiveFloorDashboard from './components/floor/LiveFloorDashboard';
+import AICopilotPanel from './components/common/AICopilotPanel';
+import MultiWarehouseStock from './components/common/MultiWarehouseStock';
 
 export default function App() {
   const [activePhase, setActivePhase] = useState('phase1');
@@ -52,10 +55,10 @@ export default function App() {
         </div>
 
         {/* Phase Navigation Tabs */}
-        <nav className="flex max-w-7xl mx-auto px-4 space-x-2">
+        <nav className="flex max-w-7xl mx-auto px-4 space-x-2 overflow-x-auto">
           <button
             onClick={() => setActivePhase('phase1')}
-            className={`flex items-center space-x-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors ${
+            className={`flex items-center space-x-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors shrink-0 ${
               activePhase === 'phase1'
                 ? 'border-blue-500 text-blue-400 bg-blue-500/10'
                 : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
@@ -67,7 +70,7 @@ export default function App() {
 
           <button
             onClick={() => setActivePhase('phase2')}
-            className={`flex items-center space-x-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors ${
+            className={`flex items-center space-x-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors shrink-0 ${
               activePhase === 'phase2'
                 ? 'border-emerald-500 text-emerald-400 bg-emerald-500/10'
                 : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
@@ -79,7 +82,7 @@ export default function App() {
 
           <button
             onClick={() => setActivePhase('phase3')}
-            className={`flex items-center space-x-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors ${
+            className={`flex items-center space-x-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors shrink-0 ${
               activePhase === 'phase3'
                 ? 'border-purple-500 text-purple-400 bg-purple-500/10'
                 : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
@@ -88,13 +91,37 @@ export default function App() {
             <Cpu className="w-4 h-4" />
             <span>Phase 3: IT Integration & KPIs</span>
           </button>
+
+          <button
+            onClick={() => setActivePhase('iot')}
+            className={`flex items-center space-x-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors shrink-0 ${
+              activePhase === 'iot'
+                ? 'border-green-500 text-green-400 bg-green-500/10'
+                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+            }`}
+          >
+            <Radio className="w-4 h-4 text-green-400 animate-pulse" />
+            <span>Live IoT Floor Stream</span>
+          </button>
+
+          <button
+            onClick={() => setActivePhase('copilot')}
+            className={`flex items-center space-x-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors shrink-0 ${
+              activePhase === 'copilot'
+                ? 'border-fuchsia-500 text-fuchsia-400 bg-fuchsia-500/10'
+                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-fuchsia-400 animate-pulse" />
+            <span>AI Co-pilot</span>
+          </button>
         </nav>
       </header>
 
       {/* Main Content Body */}
       <main className="max-w-7xl mx-auto px-4 py-6">
         {/* Global Bottleneck Warning Banner */}
-        {bottlenecks.length > 0 && (
+        {bottlenecks.length > 0 && activePhase !== 'iot' && activePhase !== 'copilot' && (
           <div className="mb-6 p-4 bg-amber-950/40 border border-amber-800/60 rounded-xl flex items-start space-x-3">
             <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
             <div className="flex-1">
@@ -119,6 +146,7 @@ export default function App() {
         {activePhase === 'phase1' && (
           <div className="space-y-6">
             <TechPackBOM />
+            <MultiWarehouseStock />
             <FabricInspection />
             <CuttingSpreading />
             <LineBalancing />
@@ -134,6 +162,18 @@ export default function App() {
         {/* Phase 3 View: IT Blueprint & Analytics */}
         {activePhase === 'phase3' && (
           <KPIIntegration />
+        )}
+
+        {/* Live IoT Floor Stream View */}
+        {activePhase === 'iot' && (
+          <LiveFloorDashboard />
+        )}
+
+        {/* AI Co-pilot Panel View */}
+        {activePhase === 'copilot' && (
+          <div className="max-w-3xl mx-auto">
+            <AICopilotPanel />
+          </div>
         )}
       </main>
     </div>
