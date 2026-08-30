@@ -17,7 +17,7 @@ class LineBalanceRequest(BaseModel):
     workers: List[Worker]
     operations: List[Operation]
 
-@app.post("/api/balance-line")
+@app.post("/optimize-line")
 def balance_line(data: LineBalanceRequest):
     # Basic greedy allocation logic matching workers to operations based on skill
     sorted_workers = sorted(data.workers, key=lambda w: w.skill_rating, reverse=True)
